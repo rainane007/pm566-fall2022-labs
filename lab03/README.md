@@ -407,19 +407,19 @@ cor(elev$temp, elev$day, use="complete")
 hist(met$elev, breaks=100)
 ```
 
-![](Lab-03_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ``` r
 hist(met$temp)
 ```
 
-![](Lab-03_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
 
 ``` r
 hist(met$wind.sp)
 ```
 
-![](Lab-03_files/figure-gfm/unnamed-chunk-10-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-3.png)<!-- -->
 
 Look at where the weather station with highest elevation is located.
 
@@ -429,7 +429,7 @@ leaflet(elev) %>%
   addCircles(lat=~lat,lng=~lon, opacity=1, fillOpacity=1, radius=100)
 ```
 
-![](Lab-03_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 Look at the time series of temperature and wind speed at this location.
 For this we will need to create a date-time variable for the x-axis.
@@ -484,10 +484,10 @@ head(elev)
 plot(elev$date, elev$temp, type='l')
 ```
 
-![](Lab-03_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ``` r
 plot(elev$date, elev$wind.sp, type='l')
 ```
 
-![](Lab-03_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
