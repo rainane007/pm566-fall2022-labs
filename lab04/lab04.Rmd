@@ -1,0 +1,34 @@
+---
+title: "lab04"
+author: "Yuhong Hu"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Read in data
+```{r}
+if (!file.exists("met_all.gz"))
+  download.file(
+    url = "https://raw.githubusercontent.com/USCbiostats/data-science-data/master/02_met/met_all.gz",
+    destfile = "met_all.gz",
+    method   = "libcurl",
+    timeout  = 60
+    )
+met <- data.table::fread("met_all.gz")
+```
+# Prepare the data
+Remove temperatures less than -17C
+Make sure there are no missing data in the key variables coded as 9999, 999, etc
+Generate a date variable using the functions as.Date() (hint: You will need the following to create a date paste(year, month, day, sep = "-")).
+Using the data.table::week function, keep the observations of the first week of the month.
+Compute the mean by station of the variables temp, rh, wind.sp, vis.dist, dew.point, lat, lon, and elev.
+Create a region variable for NW, SW, NE, SE based on lon = -98.00 and lat = 39.71 degrees
+Create a categorical variable for elevation as in the lecture slides
+```{r}
+
+```
+
