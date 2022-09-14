@@ -1,0 +1,55 @@
+Lab 04
+================
+Yuhong Hu
+2022-09-14
+
+# Read in data
+
+``` r
+if (!file.exists("met_all.gz"))
+  download.file(
+    url = "https://raw.githubusercontent.com/USCbiostats/data-science-data/master/02_met/met_all.gz",
+    destfile = "met_all.gz",
+    method   = "libcurl",
+    timeout  = 60
+    )
+met <- data.table::fread("met_all.gz")
+```
+
+# Prepare the data
+
+Remove temperatures less than -17C and change elev 9999 to NA
+
+``` r
+met <- met[temp > -17][elev == 9999.0,elev := NA]
+
+# Generate a date variable using the functions as.Date() (hint: You will need the following to create a date paste(year, month, day, sep = "-")).
+met <- met[,ymd:=as.Date(paste(year,month,day,sep = "-"))]
+
+# Using the data.table::week function, keep the observations of the first week of the month.
+met[,table(week(ymd))]
+```
+
+    ## 
+    ##     31     32     33     34     35 
+    ## 371544 520440 529571 526312 369337
+
+``` r
+met <- met[week(ymd)==31]
+
+# Compute the mean by station of the variables temp, rh, wind.sp, vis.dist, dew.point, lat, lon, and elev.
+met_avg <- met[,.(
+  temp = mean(temp,na.rm=TRUE),
+  rh = mean(rh,na.rm=TRUE),
+  wind.sp = mean(wind.sp,na.rm=TRUE),
+  vis.dist = mean(vis.dist,na.rm=TRUE),
+  dew.point = mean(dew.point,na.rm=TRUE),
+  lat = mean(lat,na.rm=TRUE),
+  lon = mean(lon,na.rm=TRUE),
+  elev = mean(elev,na.rm=TRUE)
+),by = 'USAFID']
+
+
+# Create a region variable for NW, SW, NE, SE based on lon = -98.00 and lat = 39.71 degrees
+# Create a categorical variable for elevation as in the lecture slides
+```
