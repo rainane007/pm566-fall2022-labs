@@ -110,5 +110,66 @@ met_avg[!is.na(region)&!is.na(wind.sp)] %>%
     ## `geom_smooth()` using formula 'y ~ x'
 
 ![](README_files/figure-gfm/scatterplot-dewpoint-wind.sp-1.png)<!-- -->
-\#geom_bar Use geom_bar to create barplots of the weather stations by
-elevation category coloured by region
+\# stat_summary
+
+``` r
+met_avg[!is.na(dew.point)] %>% 
+  ggplot(mapping=aes(x=region,y=dew.point))+
+  stat_summary(fun.data=mean_sdl,
+               geom='errorbar')
+```
+
+![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- --> \# Spatial
+trend in relative humidity in the US (leaflet)
+
+``` r
+# Generating a color palette
+rh.pal <- colorNumeric(c('darkgreen','goldenrod','brown'), domain=met_avg$rh)
+rh.pal
+```
+
+    ## function (x) 
+    ## {
+    ##     if (length(x) == 0 || all(is.na(x))) {
+    ##         return(pf(x))
+    ##     }
+    ##     if (is.null(rng)) 
+    ##         rng <- range(x, na.rm = TRUE)
+    ##     rescaled <- scales::rescale(x, from = rng)
+    ##     if (any(rescaled < 0 | rescaled > 1, na.rm = TRUE)) 
+    ##         warning("Some values were outside the color scale and will be treated as NA")
+    ##     if (reverse) {
+    ##         rescaled <- 1 - rescaled
+    ##     }
+    ##     pf(rescaled)
+    ## }
+    ## <bytecode: 0x103b64870>
+    ## <environment: 0x103b61fe8>
+    ## attr(,"colorType")
+    ## [1] "numeric"
+    ## attr(,"colorArgs")
+    ## attr(,"colorArgs")$na.color
+    ## [1] "#808080"
+
+``` r
+#Use addMarkers to include the top 10 places in relative h (hint: this will be useful rank(-rh) <= 10)
+top10rh <- met_avg[order(-rh)[1:10]]
+
+rhmap <- leaflet(top10rh) %>% 
+  # The looks of the Map
+  addProviderTiles('CartoDB.Positron') %>% 
+  # Some circles
+  addCircles(
+    lat = ~lat, lng=~lon,
+                                                  # HERE IS OUR PAL!
+    label = ~paste0(rh), color = ~ rh.pal(rh),
+    opacity = 1, fillOpacity = 1, radius = 500
+    ) %>%
+  # And a pretty legend
+  addLegend('bottomleft', pal=rh.pal, values=met_avg$rh,
+          title='Relative Humidity', opacity=1)
+
+rhmap
+```
+
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
