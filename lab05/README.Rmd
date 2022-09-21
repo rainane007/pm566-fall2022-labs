@@ -57,7 +57,7 @@ stations <- stations[n == 1,][, n := NULL]
 
 merge data with stations
 ```{r merge}
-merge(
+met <- merge(
   # Data
   x     = met,      
   y     = stations, 
@@ -67,8 +67,43 @@ merge(
   # Which obs to keep?
   all.x = TRUE,      
   all.y = FALSE
-  ) %>% nrow()
+  ) 
 
 ```
 
+
+# Question 1: Representative station for the US
+```{r}
+# Compute mean temperature, wind speed, and ap for each weather station, and pick the weather station with the average value closest to th median for the US.
+
+station_average <-
+  met[, .(temp = mean(temp,na.rm=T),
+          windsp=mean(wind.sp,na.rm=T),
+          atm.press=mean(atm.press,na.rm=T)),by=USAFID]
+
+# now get the median value for each variable
+
+statmedian <-
+  met[,.(
+  temp50=median(temp,na.rm = T),
+  windsp50=median(wind.sp,na.rm=T),
+  atmpress50=median(atm.press,na.rm=T)
+)]
+
+# A helpful function 'which.min()' we might want to use
+station_average[, temp_dist50:=abs(temp-statmedian$temp50)][order(temp_dist50)]
+station_average[which.min(temp_dist50)]
+```
+
+# Question 2: Representative station per state
+
+```{r}
+
+```
+
+
+# Question 3: In the middle?
+```{r}
+
+```
 
