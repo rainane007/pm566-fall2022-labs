@@ -1,0 +1,74 @@
+---
+title: "Lab 04"
+author: "Yuhong Hu"
+date: "`r Sys.Date()`"
+output: github_document
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dtplyr)
+library(tidyverse)
+library(data.table)
+library(lubridate)
+```
+
+
+# Read in data
+```{r read-data,cache=TRUE}
+if (!file.exists("/Users/rain/Desktop/PhD course/pm 566/pm566-fall2022-labs/lab04/met_all.gz"))
+  download.file(
+    url = "https://raw.githubusercontent.com/USCbiostats/data-science-data/master/02_met/met_all.gz",
+    destfile = "met_all.gz",
+    method   = "libcurl",
+    timeout  = 60
+    )
+met <- data.table::fread("/Users/rain/Desktop/PhD course/pm 566/pm566-fall2022-labs/lab04/met_all.gz")
+
+
+# Prepare the data
+## Remove temperatures less than -17C and change elev 9999 to NA
+
+met <- met[temp > -17][elev == 9999.0,elev := NA]
+```
+
+
+```{r station}
+# Download the data
+stations <- fread("ftp://ftp.ncdc.noaa.gov/pub/data/noaa/isd-history.csv")
+stations[, USAF := as.integer(USAF)]
+
+# Dealing with NAs and 999999
+stations[, USAF   := fifelse(USAF == 999999, NA_integer_, USAF)]
+stations[, CTRY   := fifelse(CTRY == "", NA_character_, CTRY)]
+stations[, STATE  := fifelse(STATE == "", NA_character_, STATE)]
+
+# Selecting the three relevant columns, and keeping unique records
+stations <- unique(stations[, list(USAF, CTRY, STATE)])
+
+# Dropping NAs
+stations <- stations[!is.na(USAF)]
+
+# Removing duplicates
+stations[, n := 1:.N, by = .(USAF)]
+stations <- stations[n == 1,][, n := NULL]
+```
+
+merge data with stations
+```{r merge}
+merge(
+  # Data
+  x     = met,      
+  y     = stations, 
+  # List of variables to match
+  by.x  = "USAFID",
+  by.y  = "USAF", 
+  # Which obs to keep?
+  all.x = TRUE,      
+  all.y = FALSE
+  ) %>% nrow()
+
+```
+
+
