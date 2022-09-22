@@ -108,4 +108,54 @@ station_average[which.min(temp_dist50)]
 
 # Question 2: Representative station per state
 
-# Question 3: In the middle?
+Just like the previous question, you are asked to identify what is the
+most representative, the median, station per state. This time, instead
+of looking at one variable at a time, look at the euclidean distance. If
+multiple stations show in the median, select the one located at the
+lowest latitude.
+
+``` r
+station_average <-
+  met[, .(temp = mean(temp,na.rm=T),
+          windsp=mean(wind.sp,na.rm=T),
+          atm.press=mean(atm.press,na.rm=T)),by=.(USAFID,STATE)]
+
+# now get the median value for each variable
+
+
+state_median <- station_average[,.(temp50=median(temp,na.rm=T),
+                   wind.sp50=median(windsp,na.rm=T)),by=STATE]
+
+# merge median and average
+
+station_average <- merge(
+  x=station_average,
+  y=state_median,
+  by.x = 'STATE',
+  by.y= 'STATE',
+  all.x=TRUE,
+  all.y=FALSE
+)
+
+# find the smallest distance, A helpful function 'which.min()' we might want to use
+station_average[,temp_dist_state50 := temp - temp50]
+station_average[,windsp_dist50 := windsp - wind.sp50]
+
+station_average[,eucdist :=temp_dist_state50^2 +windsp_dist50^2 ]
+
+
+repstation <- station_average[,.(eucdist=min(eucdist,na.rm=TRUE)),by=STATE]
+
+# merge the repstation with the station_average
+test <- merge(x=station_average,
+  y=repstation,
+  by.x = c('eucdist','STATE'),
+  by.y= c('eucdist','STATE'),
+  all.x=FALSE,
+  all.y=TRUE
+)
+
+dim(test)
+```
+
+    ## [1] 48 10
