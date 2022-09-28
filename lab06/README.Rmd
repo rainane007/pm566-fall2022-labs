@@ -1,0 +1,78 @@
+---
+title: "Lab 06"
+author: "Yuhong Hu"
+date: "`r Sys.Date()`"
+output: github_document
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(tidyverse)
+library(tidytext)
+library(ggplot2)
+library(forcats)
+```
+
+
+# Read in data
+```{r read-data,cache=TRUE}
+if (!file.exists("mtsamples.csv")){
+  download.file(
+    url = "https://raw.githubusercontent.com/USCbiostats/data-science-data/master/00_mtsamples/mtsamples.csv",
+    destfile = "mtsamples.csv",
+    method   = "libcurl",
+    timeout  = 60
+  )}
+
+mts <- read.csv("mtsamples.csv")
+str(mts)
+
+mts <- as_tibble(mts)
+```
+
+# Question 1: What specialties do we have?
+We can use count() from dplyr to figure out how many different catagories do we have? Are these catagories related? overlapping? evenly distributed?
+```{r}
+special <- mts %>%
+  count(medical_specialty)
+
+special %>%
+  arrange(desc(n)) %>%
+  knitr::kable()
+
+length(unique(mts$medical_specialty))
+```
+There are `r nrow(special)` medical specialties.
+
+```{r}
+special %>%
+  top_n(10,n)%>%
+  ggplot(aes(x=n,y=fct_reorder(medical_specialty,n)))+
+  geom_col()
+```
+
+
+# Question 2
+Tokenize the the words in the transcription column
+-Count the number of times each token appears
+-Visualize the top 20 most frequent words
+-Explain what we see from this result. Does it makes sense? What insights (if any) do we get?
+```{r}
+mts %>%
+  unnest_tokens(token, transcription) %>%
+  count(token,sort = TRUE)
+
+## visualization
+
+```
+
+
+
+
+
+
+
+
+
