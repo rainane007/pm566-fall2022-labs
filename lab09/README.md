@@ -43,9 +43,9 @@ microbenchmark::microbenchmark(
     ## nanosecond times to avoid potential integer overflows
 
     ## Unit: microseconds
-    ##       expr     min       lq      mean   median       uq      max neval cld
-    ##     fun1() 162.442 177.7350 185.33886 181.3840 188.6820  332.059   100   b
-    ##  fun1alt()  12.669  13.7145  24.98253  14.2475  14.8625 1049.395   100  a
+    ##       expr     min       lq      mean   median       uq     max neval cld
+    ##     fun1() 161.089 176.6280 183.25893 180.3795 185.8940 296.184   100   b
+    ##  fun1alt()  12.997  13.5095  24.17811  14.1450  14.8625 991.011   100  a
 
 something about matrix
 
@@ -137,9 +137,9 @@ microbenchmark::microbenchmark(
 ```
 
     ## Unit: microseconds
-    ##        expr     min       lq      mean  median       uq      max neval cld
-    ##     fun2(x) 508.318 542.2045 607.98203 564.693 615.3280 3217.844   100   b
-    ##  fun2alt(x)  70.561  73.9435  92.34225  76.916  83.4965 1290.885   100  a
+    ##        expr     min       lq      mean   median       uq      max neval cld
+    ##     fun2(x) 509.876 538.9655 628.80347 566.5790 620.0225 4752.966   100   b
+    ##  fun2alt(x)  70.643  76.0550  91.07986  78.6585  81.9385 1169.115   100  a
 
 # Problem 3: Parallelize everything
 
@@ -244,4 +244,4 @@ system.time(my_boot(dat = data.frame(x, y), my_stat, R = 4000, ncpus = 2L))
 ```
 
     ##    user  system elapsed 
-    ##   0.078   0.022   0.561
+    ##   0.078   0.021   0.560

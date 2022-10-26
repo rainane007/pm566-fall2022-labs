@@ -6,6 +6,7 @@ output:
        github_document:
          html_preview: false
        html_document: default
+       pdf_document: default
 always_allow_html: true
 ---
 
@@ -132,7 +133,7 @@ my_boot <- function(dat, stat, R, ncpus = 1L) {
 ```
 
 1. Use the previous pseudocode, and make it work with parallel. Here is just an example for you to try:
-```{r}
+```{r,warning=FALSE}
 # Bootstrap of an OLS
 my_stat <- function(d) coef(lm(y ~ x, data=d))
 
@@ -160,7 +161,7 @@ ans0
 ```
 
 2. Check whether your version actually goes faster than the non-parallel version:
-```{r}
+```{r,warning=FALSE}
 system.time(my_boot(dat = data.frame(x, y), my_stat, R = 4000, ncpus = 1L))
 system.time(my_boot(dat = data.frame(x, y), my_stat, R = 4000, ncpus = 2L))
 ```
