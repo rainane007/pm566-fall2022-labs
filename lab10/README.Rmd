@@ -1,0 +1,93 @@
+---
+title: "Lab 09"
+author: "Yuhong Hu"
+date: "`r Sys.Date()`"
+output: github_document
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Set up
+```{r}
+library(RSQLite)
+library(DBI)
+
+# Initialize a temporary in memory database
+con <- dbConnect(SQLite(), ":memory:")
+
+# Download tables
+actor <- read.csv("https://raw.githubusercontent.com/ivanceras/sakila/master/csv-sakila-db/actor.csv")
+rental <- read.csv("https://raw.githubusercontent.com/ivanceras/sakila/master/csv-sakila-db/rental.csv")
+customer <- read.csv("https://raw.githubusercontent.com/ivanceras/sakila/master/csv-sakila-db/customer.csv")
+payment <- read.csv("https://raw.githubusercontent.com/ivanceras/sakila/master/csv-sakila-db/payment_p2007_01.csv")
+
+# Copy data.frames to database
+dbWriteTable(con, "actor", actor)
+dbWriteTable(con, "rental", rental)
+dbWriteTable(con, "customer", customer)
+dbWriteTable(con, "payment", payment)
+```
+
+```{sql,connection=con}
+PRAGMA table_info(actor)
+```
+
+An alterenatives would be
+```{r}
+dbGetQuery(con,
+'PRAGMA table_info(actor)')
+```
+
+# Exercise 1
+Retrive the actor ID, first name and last name for all actors using the actor table. Sort by last name and then by first name.
+
+```{r}
+dbGetQuery(con,
+  "SELECT actor_id, first_name, last_name
+  FROM actor 
+  ORDER BY last_name, first_name
+  ")
+```
+Try in SQL directly
+
+```{sql,connection=con}
+SELECT actor_id, first_name, last_name
+FROM actor 
+ORDER BY last_name, first_name
+```
+
+
+#Exercise 2
+
+Retrive the actor ID, first name, and last name for actors whose last name equals ‘WILLIAMS’ or ‘DAVIS’.
+
+```{r}
+
+```
+
+#Exercise 3
+
+Write a query against the rental table that returns the IDs of the customers who rented a film on July 5, 2005 (use the rental.rental_date column, and you can use the date() function to ignore the time component). Include a single row for each distinct customer ID.
+
+```{r}
+
+```
+
+# Exercise 4
+
+```{r}
+
+```
+
+# clean up
+```{r}
+dbDisconnect(con)
+```
+
+
+
+
