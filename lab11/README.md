@@ -9,7 +9,7 @@ always_allow_html: true
 ---
 
 
-**HTML report:** [**click here**](https://rawcdn.githack.com/rainane007/pm566-fall2022-labs/ca5b46dd84891cc0ee530013a5d496e6a8b4cf02/lab11/lab11.html)
+**See HTML report:** [**click here**](https://rawcdn.githack.com/rainane007/pm566-fall2022-labs/ca5b46dd84891cc0ee530013a5d496e6a8b4cf02/lab11/lab11.html)
 
 **And remember to set `eval=TRUE`**
 
